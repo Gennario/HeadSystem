@@ -15,6 +15,7 @@ import java.net.URL;
 import java.util.Scanner;
 import java.util.UUID;
 
+@Getter
 public class HeadManager {
 
     public enum HeadType {
@@ -31,7 +32,6 @@ public class HeadManager {
     }
 
     public ItemStack convert() {
-        Bukkit.broadcastMessage(value);
         if (type.equals(HeadType.PLAYER_HEAD)) {
             return getSkullByTexture(getPlayerHeadTexture(value));
         } else {
@@ -39,16 +39,7 @@ public class HeadManager {
         }
     }
 
-    public HeadType getType() {
-        return type;
-    }
-
-    public String getValue() {
-        return value;
-    }
-
     private static ItemStack getSkullByTexture(String url) {
-
         ItemStack head = MaterialUtils.getAllVersionStack("SKULL_ITEM", "PLAYER_HEAD", 3);
         if (url.isEmpty() || url.equals("none")) return head;
 
@@ -70,7 +61,7 @@ public class HeadManager {
     }
 
     public String getPlayerHeadTexture(String username) {
-        if(getPlayerId(username).equals("none")) return "none";
+        if (getPlayerId(username).equals("none")) return "none";
         String url = "https://sessionserver.mojang.com/session/minecraft/profile/" + getPlayerId(username);
         try {
             JSONParser jsonParser = new JSONParser();
