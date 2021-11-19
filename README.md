@@ -16,3 +16,6 @@ new HeadManager(HeadManager.HeadType.PLAYER_HEAD, name).convert(); //Returns Ite
 String name = "your value"; //Base64 code
 new HeadManager(HeadManager.HeadType.BASE64, name).convert(); //Returns ItemStack
 ```
+
+
+Thanks to itIsMaku for kotlin version <3
