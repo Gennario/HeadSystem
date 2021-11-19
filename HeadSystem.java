@@ -40,7 +40,7 @@ public class HeadManager {
     }
 
     private static ItemStack getSkullByTexture(String url) {
-        ItemStack head = MaterialUtils.getAllVersionStack("SKULL_ITEM", "PLAYER_HEAD", 3);
+        ItemStack head = getHead();
         if (url.isEmpty() || url.equals("none")) return head;
 
         SkullMeta skullMeta = (SkullMeta) head.getItemMeta();
@@ -109,6 +109,20 @@ public class HeadManager {
             return "none";
         }
         return "none";
+    }
+
+    public ItemStack getHead() {
+        ItemStack headStack = null;
+        Material material = null;
+        int data = 0;
+        try {
+            material = Material.valueOf("PLAYER_HEAD");
+        } catch (Exception e) {
+            material = Material.valueOf("SKULL_ITEM");
+            data = 3;
+        }
+        headStack = new ItemStack(material, 1, (byte)data);
+        return headStack;
     }
 
 }
