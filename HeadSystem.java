@@ -60,7 +60,7 @@ public class HeadManager {
         return head;
     }
 
-    public CompleteableFuture<String> getPlayerHeadTextureAsync(String username) {
+    public CompletableFuture<String> getPlayerHeadTextureAsync(String username) {
         return CompletableFuture.supplyAsync(() -> getPlayerHeadTexture(username));
     }
     
