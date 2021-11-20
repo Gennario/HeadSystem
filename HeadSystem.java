@@ -1,6 +1,7 @@
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.json.simple.JSONArray;
@@ -14,7 +15,12 @@ import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.Scanner;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
+import lombok.Getter;
+import lombok.AllArgsConstructor;
+
+@AllArgsConstructor
 @Getter
 public class HeadManager {
 
@@ -23,14 +29,9 @@ public class HeadManager {
         BASE64;
     }
 
-    private HeadType type;
-    private String value;
-
-    public HeadManager(HeadType type, String value) {
-        this.type = type;
-        this.value = value;
-    }
-
+    private final HeadType type;
+    private final String value;
+    
     public ItemStack convert() {
         if (type.equals(HeadType.PLAYER_HEAD)) {
             return getSkullByTexture(getPlayerHeadTexture(value));
@@ -38,8 +39,16 @@ public class HeadManager {
             return getSkullByTexture(value);
         }
     }
+    
+    public CompletableFuture<ItemStack> convertAsync() {
+        if (type.equals(HeadType.PLAYER_HEAD)) {
+            return getPlayerHeadTextureAsync(value).thenApply(this::getSkullByTexture);
+        } else {
+            return CompletableFuture.supplyAsync(() -> getSkullByTexture(value));
+        }
+    }
 
-    private static ItemStack getSkullByTexture(String url) {
+    private ItemStack getSkullByTexture(String url) {
         ItemStack head = getHead();
         if (url.isEmpty() || url.equals("none")) return head;
 
@@ -88,7 +97,7 @@ public class HeadManager {
         try {
             URL url = new URL(urlString);
             reader = new BufferedReader(new InputStreamReader(url.openStream()));
-            StringBuffer buffer = new StringBuffer();
+            StringBuilder buffer = new StringBuilder();
             int read;
             char[] chars = new char[1024];
             while ((read = reader.read(chars)) != -1) buffer.append(chars, 0, read);
@@ -97,7 +106,6 @@ public class HeadManager {
             if (reader != null) reader.close();
         }
     }
-
 
     private String getPlayerId(String playerName) {
         try {
@@ -116,8 +124,8 @@ public class HeadManager {
     }
 
     public ItemStack getHead() {
-        ItemStack headStack = null;
-        Material material = null;
+        ItemStack headStack;
+        Material material;
         int data = 0;
         try {
             material = Material.valueOf("PLAYER_HEAD");
