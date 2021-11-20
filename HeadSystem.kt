@@ -40,6 +40,12 @@ class HeadManager(val type: HeadType, val value: String) {
             "none"
         }
     }
+    
+    fun getPlayerHeadTextureAsync(username: String): CompletableFuture<String> {
+        return CompletableFuture.supplyAsync {
+            getPlayerHeadTexture(username)
+        }
+    }
 
     private fun readUrl(urlString: String): String {
         var reader: BufferedReader? = null
