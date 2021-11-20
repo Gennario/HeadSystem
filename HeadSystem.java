@@ -60,6 +60,10 @@ public class HeadManager {
         return head;
     }
 
+    public CompleteableFuture<String> getPlayerHeadTextureAsync(String username) {
+        return CompletableFuture.supplyAsync(() -> getPlayerHeadTexture(username));
+    }
+    
     public String getPlayerHeadTexture(String username) {
         if (getPlayerId(username).equals("none")) return "none";
         String url = "https://sessionserver.mojang.com/session/minecraft/profile/" + getPlayerId(username);
